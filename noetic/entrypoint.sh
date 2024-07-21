@@ -49,6 +49,9 @@ else
 fi
 EOF
 
+# SSH Settings
+# mkdir /var/run/sshd
+
 # Supervisor
 CONF_PATH=/etc/supervisor/conf.d/supervisord.conf
 cat << EOF > $CONF_PATH

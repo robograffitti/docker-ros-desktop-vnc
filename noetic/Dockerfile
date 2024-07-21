@@ -15,10 +15,11 @@
 # This Dockerfile is based on https://github.com/AtsushiSaito/docker-ubuntu-sweb
 # which is released under the Apache-2.0 license.
 
-FROM ubuntu:focal-20240427
+# FROM ubuntu:focal-20240427
+FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu20.04
 
 ARG TARGETPLATFORM
-LABEL maintainer="Tiryoh<tiryoh@gmail.com>"
+LABEL maintainer="yoshimaru<robograffitti@gmail.com>"
 
 SHELL ["/bin/bash", "-c"]
 
@@ -29,10 +30,10 @@ RUN apt-get update -q && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Ubuntu Mate desktop
+# Install Ubuntu desktop
 RUN apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        ubuntu-mate-desktop && \
+        ubuntu-desktop && \
     apt-get autoclean && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
@@ -43,7 +44,8 @@ RUN apt-get update && \
         tigervnc-standalone-server tigervnc-common \
         supervisor wget curl gosu git sudo python3-pip tini \
         build-essential vim sudo lsb-release locales \
-        bash-completion tzdata terminator && \
+        bash-completion tzdata terminator \
+        subversion ssh aptitude emacs && \
     apt-get autoclean && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
@@ -119,8 +121,20 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
 # Enable apt-get completion after running `apt-get update` in the container
 RUN rm /etc/apt/apt.conf.d/docker-clean
 
+# Nvidia
+# ENV NVIDIA_VISIBLE_DEVICES all
+# ENV NVIDIA_DRIVER_CAPABILITIES utility,compute
+
 COPY ./entrypoint.sh /
 ENTRYPOINT [ "/bin/bash", "-c", "/entrypoint.sh" ]
 
 ENV USER ubuntu
 ENV PASSWD ubuntu
+
+# SSH Settings
+# ENV NOTVISIBLE "in users profile"
+# RUN echo "export VISIBLE=now" >> /etc/profile
+
+# SSH with docker run
+# EXPOSE 22
+# CMD ["/usr/sbin/sshd", "-D"]
