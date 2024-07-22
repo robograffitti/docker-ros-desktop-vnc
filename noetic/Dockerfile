@@ -33,7 +33,7 @@ RUN apt-get update -q && \
 # Install Ubuntu desktop
 RUN apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        ubuntu-desktop && \
+        ubuntu-mate-desktop && \
     apt-get autoclean && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
